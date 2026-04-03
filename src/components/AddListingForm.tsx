@@ -3,19 +3,21 @@ import React, { useState } from 'react';
 import { Listing } from '../types/Listing';
 
 interface AddListingFormProps {
-  onSubmit: (listing: Omit<Listing, 'id' | 'userId' | 'createdAt'>) => void;
+  onSubmit: (listing: Omit<Listing, 'id' | 'userId' | 'listDate'>) => void;
   onCancel: () => void;
 }
 
 const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
+    title: '',
+    description: '',
     image: '',
     price: 0,
-    neighborhood: '',
+    furnitureType: '',
     condition: 'Good' as const,
-    tags: '',
-    description: '',
-    isAuction: false,
+    location: '',
+    deliveryMethod: 'Both' as const,
+    sellerContact: '',
   });
 
   const handleChange = (
@@ -24,25 +26,13 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
     const { name, value, type } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        type === 'checkbox'
-          ? (e.target as HTMLInputElement).checked
-          : type === 'number'
-            ? Number(value)
-            : value,
+      [name]: type === 'number' ? Number(value) : value,
     }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const formatted = {
-      ...formData,
-      tags: formData.tags
-        .split(',')
-        .map((tag) => tag.trim())
-        .filter(Boolean),
-    } as Omit<Listing, 'id' | 'userId' | 'createdAt'>;
-    onSubmit(formatted);
+    onSubmit(formData as Omit<Listing, 'id' | 'userId' | 'listDate'>);
   };
 
   return (
@@ -69,6 +59,38 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
         <div className="modal-body">
           <form onSubmit={handleSubmit}>
             <div className="form-group">
+              <label htmlFor="title" className="form-label">
+                Title
+              </label>
+              <input
+                id="title"
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="e.g., Office Chair with Lumbar Support"
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="description" className="form-label">
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                rows={3}
+                className="form-textarea"
+                placeholder="Describe the furniture item in detail..."
+                required
+              />
+            </div>
+
+            <div className="form-group">
               <label htmlFor="image" className="form-label">
                 Image URL
               </label>
@@ -83,6 +105,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
                 required
               />
             </div>
+
             <div className="form-grid">
               <div className="form-group">
                 <label htmlFor="price" className="form-label">
@@ -119,67 +142,73 @@ const AddListingForm: React.FC<AddListingFormProps> = ({ onSubmit, onCancel }) =
                 </select>
               </div>
             </div>
-            <div className="form-group">
-              <label htmlFor="neighborhood" className="form-label">
-                Neighborhood
-              </label>
-              <input
-                id="neighborhood"
-                type="text"
-                name="neighborhood"
-                value={formData.neighborhood}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="e.g., Downtown, Campus"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="tags" className="form-label">
-                Tags (comma-separated)
-              </label>
-              <input
-                id="tags"
-                type="text"
-                name="tags"
-                value={formData.tags}
-                onChange={handleChange}
-                className="form-input"
-                placeholder="chair, desk, storage"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="description" className="form-label">
-                Description
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={3}
-                className="form-textarea"
-                placeholder="Describe the furniture item..."
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label
-                htmlFor="isAuction"
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
+
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="furnitureType" className="form-label">
+                  Furniture Type
+                </label>
                 <input
-                  id="isAuction"
-                  type="checkbox"
-                  name="isAuction"
-                  checked={formData.isAuction}
+                  id="furnitureType"
+                  type="text"
+                  name="furnitureType"
+                  value={formData.furnitureType}
                   onChange={handleChange}
-                  style={{ marginRight: '0.5rem' }}
+                  className="form-input"
+                  placeholder="e.g., Chair, Desk, Bookshelf"
+                  required
                 />
-                Auction Mode
-              </label>
+              </div>
+              <div className="form-group">
+                <label htmlFor="location" className="form-label">
+                  Location
+                </label>
+                <input
+                  id="location"
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="e.g., Downtown, Campus"
+                  required
+                />
+              </div>
             </div>
+
+            <div className="form-group">
+              <label htmlFor="deliveryMethod" className="form-label">
+                Delivery Method
+              </label>
+              <select
+                id="deliveryMethod"
+                name="deliveryMethod"
+                value={formData.deliveryMethod}
+                onChange={handleChange}
+                className="form-input"
+              >
+                <option value="Pickup">Pickup Only</option>
+                <option value="Delivery">Delivery Only</option>
+                <option value="Both">Pickup or Delivery</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="sellerContact" className="form-label">
+                Your Contact Email
+              </label>
+              <input
+                id="sellerContact"
+                type="email"
+                name="sellerContact"
+                value={formData.sellerContact}
+                onChange={handleChange}
+                className="form-input"
+                placeholder="your.email@u.northwestern.edu"
+                required
+              />
+            </div>
+
             <div className="form-actions">
               <button type="button" onClick={onCancel} className="btn btn-secondary">
                 Cancel

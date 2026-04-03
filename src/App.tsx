@@ -3,125 +3,168 @@ import React, { useState } from 'react';
 import AddListingButton from './components/AddListingButton';
 import AddListingForm from './components/AddListingForm';
 import ListingCard from './components/ListingCard';
+import ListingDetailsModal from './components/ListingDetailsModal';
 import SearchBar from './components/SearchBar';
 import { Listing } from './types/Listing';
 
 const mockListings: Listing[] = [
   {
     id: '1',
+    title: 'Office Chair with Lumbar Support',
+    description:
+      'Comfortable office chair in great condition. Adjustable height and lumbar support. Perfect for studying.',
+    price: 50,
     image:
       'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
-    price: 50,
-    neighborhood: 'Downtown',
+    furnitureType: 'Chair',
     condition: 'Good',
-    tags: ['Chair', 'Office'],
-    description: 'Comfortable office chair with lumbar support',
+    location: 'Downtown',
+    deliveryMethod: 'Pickup',
+    listDate: new Date(Date.now() - 86400000), // 1 day ago
     userId: 'user1',
-    createdAt: new Date(Date.now() - 86400000), // 1 day ago
+    sellerContact: 'john@u.northwestern.edu',
   },
   {
     id: '2',
+    title: 'Modern Wooden Study Desk',
+    description:
+      'Sleek wooden desk with drawers for storage. Ideal for dorm rooms. Like new condition.',
+    price: 100,
     image:
       'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop',
-    price: 100,
-    neighborhood: 'Campus',
+    furnitureType: 'Desk',
     condition: 'Like New',
-    tags: ['Desk', 'Study'],
-    description: 'Modern wooden study desk with drawers',
+    location: 'Campus',
+    deliveryMethod: 'Both',
+    listDate: new Date(Date.now() - 172800000), // 2 days ago
     userId: 'user2',
-    createdAt: new Date(Date.now() - 172800000), // 2 days ago
+    sellerContact: 'sarah@u.northwestern.edu',
   },
   {
     id: '3',
+    title: 'Adjustable Bookshelf',
+    description:
+      'Wooden bookshelf with adjustable shelves. Good for organizing textbooks and personal items.',
+    price: 25,
     image:
       'https://images.unsplash.com/photo-1549497538-303791108f95?w=400&h=300&fit=crop',
-    price: 25,
-    neighborhood: 'Westside',
+    furnitureType: 'Bookshelf',
     condition: 'Fair',
-    tags: ['Bookshelf', 'Storage'],
-    description: 'Bookshelf with adjustable shelves',
+    location: 'Westside',
+    deliveryMethod: 'Pickup',
+    listDate: new Date(Date.now() - 259200000), // 3 days ago
     userId: 'user3',
-    createdAt: new Date(Date.now() - 259200000), // 3 days ago
+    sellerContact: 'mike@u.northwestern.edu',
   },
   {
     id: '4',
+    title: 'Ergonomic Gaming Chair with RGB',
+    description:
+      'High-back gaming chair with RGB lighting and lumbar support. Barely used, like new.',
+    price: 75,
     image:
       'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
-    price: 75,
-    neighborhood: 'Eastside',
+    furnitureType: 'Chair',
     condition: 'New',
-    tags: ['Chair', 'Gaming'],
-    description: 'Ergonomic gaming chair with RGB lighting',
+    location: 'Eastside',
+    deliveryMethod: 'Delivery',
+    listDate: new Date(Date.now() - 345600000), // 4 days ago
     userId: 'user4',
-    createdAt: new Date(Date.now() - 345600000), // 4 days ago
-    isAuction: true,
+    sellerContact: 'alex@u.northwestern.edu',
   },
   {
     id: '5',
+    title: 'Compact Writing Desk',
+    description:
+      'Perfect small desk for dorm rooms. Saves space while providing a work surface.',
+    price: 40,
     image:
       'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=300&fit=crop',
-    price: 40,
-    neighborhood: 'North Campus',
+    furnitureType: 'Desk',
     condition: 'Good',
-    tags: ['Desk', 'Compact'],
-    description: 'Compact writing desk perfect for dorms',
+    location: 'North Campus',
+    deliveryMethod: 'Both',
+    listDate: new Date(Date.now() - 432000000), // 5 days ago
     userId: 'user5',
-    createdAt: new Date(Date.now() - 432000000), // 5 days ago
+    sellerContact: 'emma@u.northwestern.edu',
   },
   {
     id: '6',
+    title: 'Storage Bookshelf',
+    description:
+      'Used bookshelf in fair condition. Still very functional for storing items.',
+    price: 15,
     image:
       'https://images.unsplash.com/photo-1549497538-303791108f95?w=400&h=300&fit=crop',
-    price: 15,
-    neighborhood: 'Southside',
+    furnitureType: 'Bookshelf',
     condition: 'Poor',
-    tags: ['Bookshelf', 'Used'],
-    description: 'Old bookshelf needs some TLC',
+    location: 'Southside',
+    deliveryMethod: 'Pickup',
+    listDate: new Date(Date.now() - 518400000), // 6 days ago
     userId: 'user6',
-    createdAt: new Date(Date.now() - 518400000), // 6 days ago
+    sellerContact: 'david@u.northwestern.edu',
   },
-  // Add more mock listings as needed
 ];
 
 function App() {
   const [listings, setListings] = useState<Listing[]>(mockListings);
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [sortMethod, setSortMethod] = useState<
     'newest' | 'oldest' | 'priceAsc' | 'priceDesc'
   >('newest');
 
-  const tagSet = Array.from(new Set(listings.flatMap((listing) => listing.tags))).sort();
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const furnitureTypeSet = Array.from(
+    new Set(listings.map((listing) => listing.furnitureType)),
+  ).sort();
+  const [selectedFurnitureTypes, setSelectedFurnitureTypes] = useState<string[]>([]);
+  const [maxPrice, setMaxPrice] = useState<number | string>('');
+  const [selectedConditions, setSelectedConditions] = useState<string[]>([]);
+
+  const conditions: Array<'New' | 'Like New' | 'Good' | 'Fair' | 'Poor'> = [
+    'New',
+    'Like New',
+    'Good',
+    'Fair',
+    'Poor',
+  ];
 
   const filteredListings = listings
     .filter((listing) => {
       const query = searchQuery.toLowerCase();
       const inText =
+        listing.title.toLowerCase().includes(query) ||
         listing.description.toLowerCase().includes(query) ||
-        listing.neighborhood.toLowerCase().includes(query) ||
-        listing.tags.some((tag) => tag.toLowerCase().includes(query));
-      const selected = selectedTags.map((t) => t.toLowerCase());
-      const tagFilter =
-        selected.length === 0 ||
-        selected.some((tag) => listing.tags.map((t) => t.toLowerCase()).includes(tag));
-      return inText && tagFilter;
+        listing.location.toLowerCase().includes(query) ||
+        listing.furnitureType.toLowerCase().includes(query);
+
+      const typeFilter =
+        selectedFurnitureTypes.length === 0 ||
+        selectedFurnitureTypes.includes(listing.furnitureType);
+
+      const priceFilter = !maxPrice || listing.price <= parseFloat(maxPrice as string);
+
+      const conditionFilter =
+        selectedConditions.length === 0 || selectedConditions.includes(listing.condition);
+
+      return inText && typeFilter && priceFilter && conditionFilter;
     })
     .slice()
     .sort((a, b) => {
-      if (sortMethod === 'newest') return b.createdAt.getTime() - a.createdAt.getTime();
-      if (sortMethod === 'oldest') return a.createdAt.getTime() - b.createdAt.getTime();
+      if (sortMethod === 'newest') return b.listDate.getTime() - a.listDate.getTime();
+      if (sortMethod === 'oldest') return a.listDate.getTime() - b.listDate.getTime();
       if (sortMethod === 'priceAsc') return a.price - b.price;
       if (sortMethod === 'priceDesc') return b.price - a.price;
       return 0;
     });
 
-  const handleAddListing = (newListing: Omit<Listing, 'id' | 'userId' | 'createdAt'>) => {
+  const handleAddListing = (newListing: Omit<Listing, 'id' | 'userId' | 'listDate'>) => {
     const listing: Listing = {
       ...newListing,
       id: Date.now().toString(),
       userId: 'currentUser',
-      createdAt: new Date(),
+      listDate: new Date(),
     };
     setListings((prev) => [...prev, listing]);
     setShowAddForm(false);
@@ -131,57 +174,100 @@ function App() {
     <div className="app-container">
       <header className="header">
         <div className="header-content">
-          <h1 className="header-title">dormdeals</h1>
+          <h1 className="header-title">DormDeals</h1>
           <div className="search-bar-wrapper">
             <SearchBar onSearch={setSearchQuery} />
           </div>
           <div className="control-row">
             <div className="tag-filters">
               <button
-                className={`btn ${selectedTags.length === 0 ? 'active' : ''}`}
-                onClick={() => setSelectedTags([])}
+                className={`btn ${selectedFurnitureTypes.length === 0 ? 'active' : ''}`}
+                onClick={() => setSelectedFurnitureTypes([])}
               >
-                All
+                All Types
               </button>
-              {tagSet.map((tag) => {
-                const isChecked = selectedTags.includes(tag);
+              {furnitureTypeSet.map((type) => {
+                const isChecked = selectedFurnitureTypes.includes(type);
                 return (
                   <button
-                    key={tag}
+                    key={type}
                     className={`btn ${isChecked ? 'active' : ''}`}
                     onClick={() => {
-                      setSelectedTags((prev) =>
-                        prev.includes(tag)
-                          ? prev.filter((t) => t !== tag)
-                          : [...prev, tag],
+                      setSelectedFurnitureTypes((prev) =>
+                        prev.includes(type)
+                          ? prev.filter((t) => t !== type)
+                          : [...prev, type],
                       );
                     }}
                   >
-                    {tag}
+                    {type}
                     {isChecked && ' ✓'}
                   </button>
                 );
               })}
             </div>
-            <div>
-              <label htmlFor="sort" className="sort-label">
-                Sort by:
-              </label>
-              <select
-                id="sort"
-                value={sortMethod}
-                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                  setSortMethod(
-                    e.target.value as 'newest' | 'oldest' | 'priceAsc' | 'priceDesc',
-                  )
-                }
-                className="sort-select"
-              >
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-                <option value="priceAsc">Price: Low to High</option>
-                <option value="priceDesc">Price: High to Low</option>
-              </select>
+            <div
+              style={{
+                display: 'flex',
+                gap: '1rem',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+              }}
+            >
+              <div>
+                <label htmlFor="maxPrice" className="sort-label">
+                  Max Price:
+                </label>
+                <input
+                  id="maxPrice"
+                  type="number"
+                  value={maxPrice}
+                  onChange={(e) => setMaxPrice(e.target.value)}
+                  placeholder="Enter max price"
+                  className="sort-select"
+                  style={{ width: '100px' }}
+                />
+              </div>
+              <div>
+                <label htmlFor="condition" className="sort-label">
+                  Condition:
+                </label>
+                <select
+                  id="condition"
+                  value={selectedConditions.join(',')}
+                  onChange={(e) =>
+                    setSelectedConditions(e.target.value ? e.target.value.split(',') : [])
+                  }
+                  className="sort-select"
+                >
+                  <option value="">All Conditions</option>
+                  {conditions.map((cond) => (
+                    <option key={cond} value={cond}>
+                      {cond}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="sort" className="sort-label">
+                  Sort by:
+                </label>
+                <select
+                  id="sort"
+                  value={sortMethod}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setSortMethod(
+                      e.target.value as 'newest' | 'oldest' | 'priceAsc' | 'priceDesc',
+                    )
+                  }
+                  className="sort-select"
+                >
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                  <option value="priceAsc">Price: Low to High</option>
+                  <option value="priceDesc">Price: High to Low</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -190,7 +276,11 @@ function App() {
       <main className="main-content">
         <div className="grid">
           {filteredListings.map((listing) => (
-            <ListingCard key={listing.id} listing={listing} />
+            <ListingCard
+              key={listing.id}
+              listing={listing}
+              onClick={() => setSelectedListing(listing)}
+            />
           ))}
         </div>
         {filteredListings.length === 0 && (
@@ -220,6 +310,13 @@ function App() {
         <AddListingForm
           onSubmit={handleAddListing}
           onCancel={() => setShowAddForm(false)}
+        />
+      )}
+
+      {selectedListing && (
+        <ListingDetailsModal
+          listing={selectedListing}
+          onClose={() => setSelectedListing(null)}
         />
       )}
     </div>

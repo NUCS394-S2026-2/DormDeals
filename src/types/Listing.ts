@@ -1,13 +1,14 @@
 export interface Listing {
   id: string;
-  image: string; // URL or base64
-  price: number;
-  neighborhood: string;
-  condition: 'New' | 'Like New' | 'Good' | 'Fair' | 'Poor';
-  tags: string[];
+  title: string;
   description: string;
+  price: number;
+  image: string; // URL or base64
+  furnitureType: string;
+  condition: 'New' | 'Like New' | 'Good' | 'Fair' | 'Poor';
+  location: string;
+  deliveryMethod: 'Pickup' | 'Delivery' | 'Both';
+  listDate: Date;
   userId: string;
-  createdAt: Date;
-  isAuction?: boolean;
-  auctionEnd?: Date;
+  sellerContact: string; // Email or phone for messaging seller
 }
