@@ -4,18 +4,32 @@ import { Listing } from '../types/Listing';
 
 interface ListingCardProps {
   listing: Listing;
+  onClick?: () => void;
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
+const ListingCard: React.FC<ListingCardProps> = ({ listing, onClick }) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if ((e.key === 'Enter' || e.key === ' ') && onClick) {
+      onClick();
+    }
+  };
+
   return (
-    <div className="card">
+    <div
+      className="card"
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={onClick ? 0 : -1}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
+    >
       <div style={{ position: 'relative' }}>
-        <img src={listing.image} alt={listing.description} className="card-image" />
+        <img src={listing.image} alt={listing.title} className="card-image" />
         <div className="card-price">${listing.price}</div>
         <div className="card-condition">{listing.condition}</div>
       </div>
       <div className="card-content">
-        <h3 className="card-title">{listing.description}</h3>
+        <h3 className="card-title">{listing.title}</h3>
         <div className="card-location">
           <svg className="location-icon" fill="currentColor" viewBox="0 0 20 20">
             <path
@@ -24,22 +38,24 @@ const ListingCard: React.FC<ListingCardProps> = ({ listing }) => {
               clipRule="evenodd"
             />
           </svg>
-          {listing.neighborhood}
+          {listing.location}
         </div>
         <div className="tag-list" style={{ marginBottom: '0.5rem' }}>
-          {listing.tags.map((tag) => (
-            <span
-              key={tag}
-              className="auction-badge"
-              style={{ marginRight: 4, backgroundColor: '#e0f2fe', color: '#0369a1' }}
-            >
-              {tag}
-            </span>
-          ))}
+          <span
+            className="auction-badge"
+            style={{ marginRight: 4, backgroundColor: '#e0f2fe', color: '#0369a1' }}
+          >
+            {listing.furnitureType}
+          </span>
+          <span
+            className="auction-badge"
+            style={{ marginRight: 4, backgroundColor: '#fef2f2', color: '#dc2626' }}
+          >
+            {listing.deliveryMethod}
+          </span>
         </div>
         <div className="card-footer">
-          <span>{listing.createdAt.toLocaleDateString()}</span>
-          {listing.isAuction && <span className="auction-badge">Auction</span>}
+          <span>{listing.listDate.toLocaleDateString()}</span>
         </div>
       </div>
     </div>
