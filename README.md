@@ -1,158 +1,96 @@
-# Vite + React + TypeScript Template Updated for 2026
+# DormDeals
 
-This starter combines React, TypeScript, Vite, Vitest, ESLint, and Prettier in a setup intended for Northwestern CS394 projects and similar coursework. The template now targets the 2026 major-version baseline verified in this repository on March 24, 2026.
+DormDeals is a student marketplace web app for buying and selling furniture. The current implementation focuses on the Marketplace experience, where users can browse listings, search for furniture, filter and sort results, inspect listing details, reveal seller contact, and create new posts.
 
-![394-2026-Screenshot](./resources/2026-screenshot.png)
+## Current Marketplace Features
 
-## Toolchain Baseline
+- Browse all posted furniture listings in a card grid layout.
+- Search listings by keyword (title, description, location, and furniture type).
+- Filter listings by:
+  - Furniture type
+  - Maximum price
+  - Condition
+- Sort listings by:
+  - Posting time: newest first or oldest first
+  - Price: low to high or high to low
+- Click a listing card to open a detail modal.
+- In listing details, click Message Seller to reveal hidden seller contact.
+- Click the floating + button in the bottom-right corner to open the Add Listing form.
+- Create a listing with title, description, image upload, type, condition, location, delivery method, price, and seller contact.
 
-- Node.js `22+` recommended
-- npm `10+`
-- React `19.2.x`
-- TypeScript `5.9.x`
-- ESLint `9.39.x`
-- Vite `8.0.x`
-- Vitest `4.1.x`
+## Screenshots
 
-You can find more about these in the following links: [Vite](https://vitejs.dev), [React](https://reactjs.org/), [Typescript](https://www.typescriptlang.org/), [Eslint](https://eslint.org/), [Prettier](https://prettier.io/), [Vitest](https://vitest.dev/), [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+### Marketplace Page
 
-## What's New in 2025/2026
+![Marketplace page](./resources/Market_place_page.png)
 
-- **React 19** with the latest React DOM and TypeScript types
-- **Vite 8** for faster builds and dev server
-- **Vitest 4** with visual UI mode and V8 coverage reporting
-- **React Testing Library** with `@testing-library/jest-dom` for readable assertions and `@testing-library/user-event` for realistic user interaction simulation
-- **TypeScript 5.9** with strict mode enabled
-- **ESLint 9** using the new flat config format
-- All dependencies updated to their latest stable versions
-- **starter Copilot instructions** in `copilot-instructions.md` for code style and project structure guidelines
+### Search Bar
 
-## Installation
+![Search bar](./resources/Search_bar.png)
 
-Clone the repo and install dependencies:
+### Filtering by Furniture Type
+
+![Filtering by furniture type](./resources/Filtering_furniture_type.png)
+
+### Posting Flow
+
+![Posting a listing](./resources/Posting.png)
+
+## Tech Stack
+
+- React + TypeScript
+- Vite
+- Firebase Realtime Database
+- Vitest + React Testing Library
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 22+
+- npm 10+
+
+### Install
 
 ```bash
 npm install
 ```
 
-If you use `nvm`, run:
+### Run the App
 
 ```bash
-nvm use
+npm run dev
 ```
 
-To create a fresh copy from GitHub:
+Then open the local URL shown in the terminal (usually `http://localhost:5173`).
 
-```bash
-npx degit toddwseattle/pretty-vitest-react-ts-template project-name
-```
+## Available Scripts
 
-## Scripts
+- `npm run dev`: start Vite development server
+- `npm run build`: run type checks and create production build
+- `npm run type-check`: run TypeScript compiler without emitting output
+- `npm run lint`: run formatting and lint checks
+- `npm test`: run Vitest tests
+- `npm run test:ui`: open Vitest UI
+- `npm run test:coverage`: run tests with coverage
 
-- `npm run dev` starts the Vite dev server.
-- `npm run build` runs TypeScript and creates a production build.
-- `npm run type-check` runs the TypeScript compiler without emitting files.
-- `npm run lint` runs Prettier and ESLint across the repo.
-- `npm test` runs Vitest without the browser UI.
-- `npm test -- --run` runs the Vitest suite once without watch mode.
-- `npm run test:ui` starts the Vitest UI.
-  - The UI server is pinned to `127.0.0.1:51204`.
+## Data and Backend Notes
 
-Install packages: `npm install`
+- Listings are loaded from Firebase Realtime Database.
+- New listings are created and stored in Firebase under `listings`.
+- If loading from Firebase fails, the app falls back to local mock listings so the marketplace UI still works during development.
 
-Start the dev server: `npm run dev`
+## Project Status
 
-## Testing
+Implemented:
 
-This template uses [Vitest](https://vitest.dev/) with [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/) for testing React components.
+- Marketplace browsing page
+- Search, filtering, and sorting controls
+- Listing details modal with reveal-on-click seller contact
+- Add listing flow from the floating + button
 
-**Note**: npm audit currently reports GHSA-rf6f-7fwh-wjgh via flatted; awaiting upstream fix in @vitest/ui / flat-cache. This is a dev only dependency do notinclud npm audit of dev dependencies in your ci workflow until this is resolved.
+Planned next steps (based on app vision):
 
-### Running Tests
-
-```bash
-# Run tests in watch mode
-npm test
-
-# Run tests with the visual UI
-npm run test:ui
-
-# Run tests with coverage report
-npm run test:coverage
-```
-
-### Writing Tests with React Testing Library
-
-Tests live alongside your source files (e.g., `src/app.test.tsx` tests `src/App.tsx`). Here's a quick guide:
-
-**Rendering a component:**
-
-```tsx
-import { render, screen } from '@testing-library/react';
-import App from './App';
-
-test('renders a heading', () => {
-  render(<App />);
-  expect(screen.getByText('Hello World')).toBeInTheDocument();
-});
-```
-
-**Simulating user interactions with `userEvent`:**
-
-```tsx
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-
-test('button click increments counter', async () => {
-  const user = userEvent.setup();
-  render(<Counter />);
-  await user.click(screen.getByRole('button'));
-  expect(screen.getByText('count is: 1')).toBeInTheDocument();
-});
-```
-
-**Common queries (in order of priority):**
-
-1. `getByRole` - query by ARIA role (preferred for accessibility)
-2. `getByLabelText` - query by form label
-3. `getByPlaceholderText` - query by input placeholder
-4. `getByText` - query by visible text content
-5. `getByAltText` - query by image alt text
-
-### Testing Best Practices
-
-- **Query by role first.** Use `getByRole` when possible. It encourages accessible markup and tests your component the way users interact with it.
-- **Use `userEvent` over `fireEvent`.** `userEvent` simulates real browser behavior (focus, hover, keyboard events) while `fireEvent` dispatches a single DOM event. This catches more bugs.
-- **Avoid testing implementation details.** Don't test state variables or internal methods. Test what the user sees and does.
-- **Write descriptive test names.** A test name should explain what the component does, not how it does it. E.g., "shows error message when form is submitted empty" rather than "sets error state to true."
-- **One assertion per behavior.** Each test should verify one behavior. Multiple related assertions in a test are fine, but avoid testing unrelated behaviors together.
-
-### Test Setup
-
-The test environment is configured in `vite.config.ts`:
-
-- **Environment:** jsdom (simulates browser DOM)
-- **Globals:** enabled (no need to import `describe`, `test`, `expect` manually)
-- **Setup file:** `src/test/setup.ts` loads `@testing-library/jest-dom` matchers like `toBeInTheDocument()`
-- **Coverage:** V8 provider with 70% thresholds for statements, branches, functions, and lines
-
-## VS Code Setup
-
-For the smoothest editing experience:
-
-1. Install the ESLint extension.
-2. Install the Prettier extension.
-3. Enable `formatOnSave`.
-4. Open a `.tsx` file and confirm both ESLint and Prettier are active in the editor.
-
-## Copilot Instructions
-
-There is a basic set of copilot instructions in `copilot-instructions.md` that you can refer to for code style and project structure guidelines. Feel free to modify/change/expand these instructions as needed for your project. The instructions link with the husky hooks to make sure code is linted and formatted consistently.
-
-## Pre-commit Hook
-
-The repo includes Husky setup and keeps the historical `pre-commit` lint flow in `package.json`. Running `npm run lint` before committing is still the safest way to ensure formatting and lint fixes are already applied.
-
-## Acknowledgments
-
-This template builds on earlier starter work from [theSwordBreaker](https://github.com/TheSwordBreaker/vite-reactts-eslint-prettier) and the React/Vitest teaching materials used in Northwestern CS394.
+- Authentication restricted to `@u.northwestern.edu` accounts
+- User-level ownership and listing management
+- Messaging/communication workflow enhancements
