@@ -8,5 +8,6 @@ coverage
 
 
 firebase.js
+firebase.ts
 
 .firebase/
