@@ -79,6 +79,13 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
+  const handlePriceFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Clear the default 0 when user focuses on the price input
+    if (formData.price === 0) {
+      e.currentTarget.value = '';
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await onSubmit(formData as Omit<Listing, 'id' | 'userId' | 'createdAt'>);
@@ -263,9 +270,10 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
                   name="price"
                   value={formData.price}
                   onChange={handleChange}
+                  onFocus={handlePriceFocus}
                   className="form-input"
                   min="0"
-                  step="0.01"
+                  step="1"
                   required
                 />
               </div>
