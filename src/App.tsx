@@ -314,8 +314,8 @@ function App() {
                   }
                   className="sort-select"
                 >
-                  <option value="newest">Newest</option>
-                  <option value="oldest">Oldest</option>
+                  <option value="newest">Newest Post</option>
+                  <option value="oldest">Oldest Post</option>
                   <option value="priceAsc">Price: Low to High</option>
                   <option value="priceDesc">Price: High to Low</option>
                 </select>
