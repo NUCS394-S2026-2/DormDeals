@@ -283,6 +283,7 @@ function App() {
                 <input
                   id="maxPrice"
                   type="number"
+                  min="0"
                   value={maxPrice}
                   onChange={(e) => setMaxPrice(e.target.value)}
                   placeholder="Enter max $"
