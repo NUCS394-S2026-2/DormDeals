@@ -94,14 +94,16 @@ function App() {
     return <LoginPage />;
   }
 
-  const furnitureTypeSet = Array.from(
-    new Set(
-      (currentView === 'my-furniture'
-        ? listings.filter((l) => l.userId === user?.uid)
-        : listings
-      ).map((listing) => listing.furnitureType),
-    ),
-  ).sort();
+  const furnitureTypes = [
+    'Bed',
+    'Chair',
+    'Couch',
+    'Desk',
+    'Lamp',
+    'Sofa',
+    'Table',
+    'Other',
+  ];
 
   const filteredListings = listings
     .filter((listing) => {
@@ -305,7 +307,7 @@ function App() {
                 >
                   All Types
                 </button>
-                {furnitureTypeSet.map((type) => {
+                {furnitureTypes.map((type) => {
                   const isChecked = selectedFurnitureTypes.includes(type);
                   return (
                     <button
