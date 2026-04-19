@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { Listing } from '../types/Listing';
 
@@ -31,12 +31,25 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
     sellerContact: '',
   });
 
+  const [showCamera, setShowCamera] = useState(false);
+  const [cameraStream, setCameraStream] = useState<MediaStream | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [priceError, setPriceError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup camera stream on unmount
+      if (cameraStream) {
+        cameraStream.getTracks().forEach((track) => track.stop());
+      }
+    };
+  }, [cameraStream]);
 
   const isFieldInvalid = (field: string) => {
     if (!submitAttempted && !touched[field]) return false;
@@ -107,6 +120,71 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
     };
     reader.readAsDataURL(file);
   }, []);
+
+  // 1. Modified startCamera: Just get the stream and open the modal
+  const startCamera = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'environment',
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+      setCameraStream(stream);
+      setShowCamera(true); // This triggers the modal to render the <video> tag
+    } catch (error) {
+      console.error('Camera error:', error);
+      alert('Camera access denied or unavailable');
+    }
+  }, []);
+
+  // 2. Add this EFFECT: This attaches the stream once the <video> element exists
+  useEffect(() => {
+    if (showCamera && videoRef.current && cameraStream) {
+      videoRef.current.srcObject = cameraStream;
+
+      // Explicitly play the video
+      videoRef.current.onloadedmetadata = () => {
+        videoRef.current?.play().catch((e) => console.error('Play failed:', e));
+      };
+    }
+  }, [showCamera, cameraStream]);
+
+  const capturePhoto = useCallback(() => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const context = canvas.getContext('2d');
+
+    if (!context) return;
+
+    // Set canvas size to video size
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Draw the video frame to canvas
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert to data URL
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+    // Stop camera
+    stopCamera();
+
+    // Set the image
+    setImagePreview(dataUrl);
+    setFormData((prev) => ({ ...prev, image: dataUrl }));
+  }, []);
+
+  const stopCamera = useCallback(() => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach((track) => track.stop());
+      setCameraStream(null);
+    }
+    setShowCamera(false);
+  }, [cameraStream]);
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -326,6 +404,14 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
                   </p>
                 </div>
               )}
+              <button
+                type="button"
+                onClick={startCamera}
+                className="btn btn-secondary"
+                style={{ marginTop: '0.5rem', width: '100%' }}
+              >
+                Take Photo
+              </button>
               <input
                 id="image-upload"
                 ref={fileInputRef}
@@ -501,6 +587,68 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
           </form>
         </div>
       </div>
+
+      {showCamera && (
+        <div className="modal-overlay" style={{ zIndex: 1001 }}>
+          <div className="modal" style={{ maxWidth: '500px' }}>
+            <div className="modal-header">
+              <h2 className="modal-title">Take Photo</h2>
+              <button onClick={stopCamera} className="modal-close">
+                <svg
+                  style={{ width: '1.5rem', height: '1.5rem' }}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div className="modal-body" style={{ textAlign: 'center' }}>
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                // Adding 'object-fit: cover' and explicit height helps centering
+                style={{
+                  width: '100%',
+                  height: '350px',
+                  objectFit: 'cover', // Ensures the feed fills the box without black bars
+                  borderRadius: '8px',
+                  background: '#1a1a1a', // Darker background looks better for camera
+                  transform: 'scaleX(1)', // Use scaleX(-1) ONLY if using a selfie camera
+                }}
+              />
+
+              <canvas ref={canvasRef} style={{ display: 'none' }} />
+              <div style={{ marginTop: '1rem' }}>
+                <button
+                  type="button"
+                  onClick={capturePhoto}
+                  className="btn btn-primary"
+                  style={{ marginRight: '0.5rem' }}
+                >
+                  Capture Photo
+                </button>
+                <button type="button" onClick={stopCamera} className="btn btn-secondary">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };
