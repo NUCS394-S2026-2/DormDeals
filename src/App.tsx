@@ -85,7 +85,7 @@ function App() {
     return <LoginPage />;
   }
 
-  const furnitureTypeSet = [
+  const furnitureTypes = [
     'Bed',
     'Chair',
     'Couch',
