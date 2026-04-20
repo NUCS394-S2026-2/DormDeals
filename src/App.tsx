@@ -10,6 +10,7 @@ import ConditionRangeFilter from './components/ConditionRangeFilter';
 import ListingCard from './components/ListingCard';
 import ListingDetailsModal from './components/ListingDetailsModal';
 import LoginPage from './components/LoginPage';
+import MapView from './components/MapView';
 import SearchBar from './components/SearchBar';
 import { useAuth } from './context/AuthContext';
 import { Listing } from './types/Listing';
@@ -32,7 +33,7 @@ function App() {
   const [maxConditionIndex, setMaxConditionIndex] = useState<number>(4); // Poor (worst)
 
   const [listingsLoading, setListingsLoading] = useState(true);
-  const [currentView, setCurrentView] = useState<'all' | 'my-furniture'>('all');
+  const [currentView, setCurrentView] = useState<'all' | 'my-furniture' | 'map'>('all');
 
   const conditions: Array<'New' | 'Like New' | 'Good' | 'Fair' | 'Poor'> = [
     'New',
@@ -297,6 +298,23 @@ function App() {
             >
               My Furniture
             </button>
+            <button
+              onClick={() => setCurrentView('map')}
+              style={{
+                padding: '0.5rem 1rem',
+                fontSize: '14px',
+                color: currentView === 'map' ? '#fff' : 'rgba(255,255,255,0.7)',
+                background: 'transparent',
+                border: 'none',
+                borderBottom:
+                  currentView === 'map' ? '2px solid #3b82f6' : '2px solid transparent',
+                cursor: 'pointer',
+                fontWeight: currentView === 'map' ? '600' : '400',
+                transition: 'all 0.2s',
+              }}
+            >
+              Map View
+            </button>
           </div>
           {currentView === 'all' && (
             <div className="control-row">
@@ -392,7 +410,11 @@ function App() {
           </div>
         )}
 
-        {listingsLoading ? (
+        {currentView === 'map' ? (
+          <div style={{ height: 'calc(100vh - 200px)', minHeight: '500px' }}>
+            <MapView listings={listings} onSelectListing={setSelectedListing} />
+          </div>
+        ) : listingsLoading ? (
           <div className="empty-state">
             <div
               style={{
@@ -426,7 +448,7 @@ function App() {
             </h3>
             <p className="empty-message">
               {currentView === 'my-furniture'
-                ? 'Click the + button to create your first listing!'
+                ? 'Click the + button to create more listings!'
                 : 'Try adjusting your search or tag filter.'}
             </p>
           </div>
