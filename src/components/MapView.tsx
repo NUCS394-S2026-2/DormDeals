@@ -91,6 +91,12 @@ const MapView: React.FC<MapViewProps> = ({ listings, onSelectListing }) => {
 
   // Get user geolocation
   useEffect(() => {
+    if (typeof navigator === 'undefined' || !navigator.geolocation) {
+      setUserCoords(null);
+      setStatus('Location unavailable. Showing default area.');
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const coords = { lat: pos.coords.latitude, lon: pos.coords.longitude };
@@ -100,7 +106,7 @@ const MapView: React.FC<MapViewProps> = ({ listings, onSelectListing }) => {
       },
       () => {
         setUserCoords(null);
-        setStatus('');
+        setStatus('Location unavailable. Showing default area.');
       },
     );
   }, []);
