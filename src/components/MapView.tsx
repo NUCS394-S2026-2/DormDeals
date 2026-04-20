@@ -233,8 +233,19 @@ const MapView: React.FC<MapViewProps> = ({ listings, onSelectListing }) => {
             `);
 
         marker.on('popupopen', () => {
-          const btn = document.querySelector(`[data-listing-id="${listing.id}"]`);
-          btn?.addEventListener('click', () => onSelectListing(listing));
+          const popupElement = marker.getPopup()?.getElement();
+          const btn = popupElement?.querySelector(
+            `[data-listing-id="${listing.id}"]`,
+          ) as HTMLButtonElement | null;
+
+          if (!btn) return;
+
+          const handleClick = () => onSelectListing(listing);
+          btn.addEventListener('click', handleClick, { once: true });
+
+          marker.once('popupclose', () => {
+            btn.removeEventListener('click', handleClick);
+          });
         });
       }
 
