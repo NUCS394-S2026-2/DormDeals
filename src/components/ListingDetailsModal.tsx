@@ -30,6 +30,7 @@ const ListingDetailsModal: React.FC<ListingDetailsModalProps> = ({
     deliveryMethod: listing.deliveryMethod,
     furnitureType: listing.furnitureType,
     image: listing.image,
+    sellerContact: listing.sellerContact,
   });
 
   const handleOverlayClick = (e: React.MouseEvent) => {
@@ -109,6 +110,7 @@ const ListingDetailsModal: React.FC<ListingDetailsModalProps> = ({
       onClick={handleOverlayClick}
       onKeyDown={(e) => e.key === 'Escape' && onClose()}
       role="presentation"
+      style={{ zIndex: 10000 }}
     >
       <div
         className="modal"
@@ -375,6 +377,19 @@ const ListingDetailsModal: React.FC<ListingDetailsModalProps> = ({
                   <option value="Both">Pickup or Delivery</option>
                 </select>
               </div>
+              <div className="form-group">
+                <label htmlFor="edit-sellerContact" className="form-label">
+                  Contact Email
+                </label>
+                <input
+                  id="edit-sellerContact"
+                  name="sellerContact"
+                  type="email"
+                  value={editData.sellerContact}
+                  onChange={handleChange}
+                  style={inputStyle}
+                />
+              </div>
               <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
                 <button
                   onClick={() => setIsEditing(false)}
@@ -476,6 +491,13 @@ const ListingDetailsModal: React.FC<ListingDetailsModalProps> = ({
                   {listing.createdAt.toLocaleDateString()}
                 </p>
               </div>
+
+              {isOwner && (
+                <div className="form-group">
+                  <div className="form-label">Contact Email</div>
+                  <p style={{ margin: 0, color: '#374151' }}>{listing.sellerContact}</p>
+                </div>
+              )}
 
               {/* Owner actions */}
               {isOwner && (

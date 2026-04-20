@@ -251,7 +251,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" style={{ zIndex: 10000 }}>
       <div className="modal">
         <div className="modal-header">
           <h2 className="modal-title">Add New Listing</h2>
@@ -606,6 +606,8 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
 
       {showCamera && (
         <div
+          role="button"
+          tabIndex={0}
           className="modal-overlay"
           style={{ zIndex: 1001 }}
           onClick={(e) => {
