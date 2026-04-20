@@ -237,7 +237,7 @@ const MapView: React.FC<MapViewProps> = ({ listings, onSelectListing }) => {
         mapInstanceRef.current = null;
       }
     };
-  }, [leafletLoaded, userCoords, listings]);
+  }, [leafletLoaded, userCoords, listings, onSelectListing]);
 
   return (
     <div style={{ position: 'relative', height: '100%', minHeight: '500px' }}>
