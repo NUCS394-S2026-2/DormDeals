@@ -25,7 +25,7 @@ const LoginPage: React.FC = () => {
       if (!email || !isAllowedDomain) {
         await signOut(auth);
         setError(
-          `Use your Northwestern email in those domains: ${ALLOWED_EMAIL_DOMAINS.join(', ')}`,
+          `Use a Northwestern email address with one of these domains: ${ALLOWED_EMAIL_DOMAINS.join(', ')}`,
         );
         setLoading(false);
         return;
