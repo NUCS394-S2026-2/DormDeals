@@ -1,11 +1,30 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import { ALLOWED_EMAIL_DOMAINS } from '../constants/emailDomains';
 import { Listing } from '../types/Listing';
+
+const validateEmail = (email: string): string | null => {
+  if (!email.trim()) {
+    return null;
+  }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return 'Please enter a valid email address';
+  }
+  const isAllowedDomain = ALLOWED_EMAIL_DOMAINS.some((domain) =>
+    email.toLowerCase().endsWith(domain.toLowerCase()),
+  );
+  if (!isAllowedDomain) {
+    return `Use your Northwestern email in those domains: ${ALLOWED_EMAIL_DOMAINS.join(', ')}`;
+  }
+  return null;
+};
 
 interface AddListingFormProps {
   onSubmit: (listing: Omit<Listing, 'id' | 'userId' | 'createdAt'>) => Promise<void>;
   onCancel: () => void;
   isSubmitting: boolean;
+  furnitureTypes: string[];
 }
 
 const RequiredStar = () => (
@@ -18,6 +37,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
   onSubmit,
   onCancel,
   isSubmitting,
+  furnitureTypes,
 }) => {
   const [formData, setFormData] = useState({
     title: '',
@@ -36,6 +56,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [priceError, setPriceError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -102,6 +123,13 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
       }
       setPriceError(null);
       setFormData((prev) => ({ ...prev, [name]: numValue }));
+    } else if (name === 'sellerContact') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+      const error = validateEmail(value);
+      setEmailError(error);
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -243,7 +271,16 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
       !formData.location.trim() ||
       !formData.sellerContact.trim();
 
-    if (hasEmptyFields || priceError || formData.price < 0 || formData.price > 9999) {
+    const currentEmailError = validateEmail(formData.sellerContact);
+    setEmailError(currentEmailError);
+
+    if (
+      hasEmptyFields ||
+      priceError ||
+      currentEmailError ||
+      formData.price < 0 ||
+      formData.price > 9999
+    ) {
       return;
     }
 
@@ -501,17 +538,22 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
                   Furniture Type
                   <RequiredStar />
                 </label>
-                <input
+                <select
                   id="furnitureType"
-                  type="text"
                   name="furnitureType"
                   value={formData.furnitureType}
                   onChange={handleChange}
                   onBlur={() => handleBlur('furnitureType')}
                   className="form-input"
-                  placeholder="Chair, Desk, Bookshelf..."
                   style={{ border: errorBorder('furnitureType') }}
-                />
+                >
+                  <option value="">Select a type...</option>
+                  {furnitureTypes.map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
                 {isFieldInvalid('furnitureType') && (
                   <p
                     style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '0.25rem' }}
@@ -533,7 +575,7 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
                   onChange={handleChange}
                   onBlur={() => handleBlur('location')}
                   className="form-input"
-                  placeholder="e.g., 633 Clark St"
+                  placeholder="629 Noyes, Evanston"
                   style={{ border: errorBorder('location') }}
                 />
                 {isFieldInvalid('location') && (
@@ -578,11 +620,21 @@ const AddListingForm: React.FC<AddListingFormProps> = ({
                 onBlur={() => handleBlur('sellerContact')}
                 className="form-input"
                 placeholder="your.email@u.northwestern.edu"
-                style={{ border: errorBorder('sellerContact') }}
+                style={{
+                  border:
+                    emailError || isFieldInvalid('sellerContact')
+                      ? '1.5px solid #dc2626'
+                      : undefined,
+                }}
               />
-              {isFieldInvalid('sellerContact') && (
+              {isFieldInvalid('sellerContact') && !emailError && (
                 <p style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '0.25rem' }}>
                   Contact email is required
+                </p>
+              )}
+              {emailError && (
+                <p style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                  {emailError}
                 </p>
               )}
             </div>

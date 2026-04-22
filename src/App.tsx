@@ -103,7 +103,7 @@ function App() {
     'Lamp',
     'Sofa',
     'Table',
-    'Other',
+    'Others',
   ];
 
   const filteredListings = listings
@@ -497,6 +497,7 @@ function App() {
           onSubmit={handleAddListing}
           onCancel={() => setShowAddForm(false)}
           isSubmitting={isSubmitting}
+          furnitureTypes={furnitureTypes}
         />
       )}
 

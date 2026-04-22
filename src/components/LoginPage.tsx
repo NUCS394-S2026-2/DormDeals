@@ -3,9 +3,8 @@ import '../styles/LoginPage.css';
 import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import React, { useState } from 'react';
 
+import { ALLOWED_EMAIL_DOMAINS } from '../constants/emailDomains';
 import { auth } from '../firebase/firebase';
-
-const ALLOWED_DOMAIN = 'u.northwestern.edu';
 
 const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
@@ -20,9 +19,14 @@ const LoginPage: React.FC = () => {
 
       // Validate email domain
       const email = result.user.email;
-      if (!email || !email.endsWith(`@${ALLOWED_DOMAIN}`)) {
+      const isAllowedDomain = ALLOWED_EMAIL_DOMAINS.some((domain) =>
+        email?.toLowerCase().endsWith(domain.toLowerCase()),
+      );
+      if (!email || !isAllowedDomain) {
         await signOut(auth);
-        setError(`Only ${ALLOWED_DOMAIN} email addresses are allowed.`);
+        setError(
+          `Use your Northwestern email in those domains: ${ALLOWED_EMAIL_DOMAINS.join(', ')}`,
+        );
         setLoading(false);
         return;
       }

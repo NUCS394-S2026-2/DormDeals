@@ -27,7 +27,16 @@ listDate (to show posted 3 days ago etc…)
 JSON example for firebase:
 
 Authentication:
-Google email sign in using firebase, must end in u.northwestern.edu
+Google email sign in using firebase, must end in one of the allowed Northwestern domains:
+
+- @u.northwestern.edu
+- @northwestern.edu
+- @alum.northwestern.edu
+- @nlaw.northwestern.edu
+- @fsm.northwestern.edu
+- @kelloggalumni.northwestern.edu
+- @kellogg.northwestern.edu
+- @law.northwestern.edu
 
 Front-End display needs
 
@@ -48,7 +57,7 @@ Post
 Should have spaces for:
 Image
 Price
-Neighborhood
+Location
 Condition
 User Flows:
 Finding a piece of furniture and messaging seller:
@@ -57,13 +66,12 @@ User scrolls down page
 Uses search bar to narrow down furniture descriptions
 Searches through title, description, condition, location
 Uses filters to narrow down features
-Price range: have boxes for under $20, $20-40, $50 or a slider
-Condition: like new, new, fair, damaged
+Price range: an input for filtering by maximum price
+Condition: New, Like New, Good, Fair, Poor
 Furniture type: searchable dropdown, can check boxes for certain furniture types
 Click on more filters → popup opens in the center of the page with filter types. Can select a filter to see all of the options available.
 Click on a listing → listing expands in a popup with all available information
 See expanded information (description, and contact info)
-Click message seller → button reveals seller contact information
 Click on logo → resets all filters, search query, and sort settings to return to default marketplace page
 
 Listing an item:
@@ -71,7 +79,7 @@ Click list an item
 Fill out listing
 Drop in image
 Type title, description, location
-Select furniture: searchable window where you can select from a list of furniture
+Select furniture type: use drop-down to select from a fixed list of furniture types
 Enter price
 Choose pickup method from dropdown
 Click to save listing → listing is saved to backend → calls the POST listing api
