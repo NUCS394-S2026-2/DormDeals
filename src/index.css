@@ -395,7 +395,6 @@ code {
   font-weight: 600;
   padding: 0.35rem 0.65rem;
 }
-
 @media (max-width: 768px) {
   .header-content > div:first-child {
     flex-direction: column;
