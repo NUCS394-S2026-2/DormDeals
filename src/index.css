@@ -395,3 +395,22 @@ code {
   font-weight: 600;
   padding: 0.35rem 0.65rem;
 }
+
+@media (max-width: 768px) {
+  .header-content > div:first-child {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-bar-wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+    order: 2; /* Places search bar after logo */
+  }
+
+  .search-bar-wrapper ~ div {
+    width: 100%;
+    margin-left: 0 !important;
+    order: 3;
+  }
+}
