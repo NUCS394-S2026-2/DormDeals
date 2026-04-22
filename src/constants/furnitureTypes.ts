@@ -1,10 +1,10 @@
 export const FURNITURE_TYPES = [
-  'Bed',
-  'Chair',
-  'Couch',
-  'Desk',
-  'Lamp',
-  'Sofa',
-  'Table',
+  'Bed/Mattress/Frame',
+  'Chair/Stool',
+  'Couch/Sofa',
+  'Desk/Table',
+  'Electronics/Entertainment',
+  'Shelf/Storage',
+  'Tools/Appliances',
   'Others',
 ];
