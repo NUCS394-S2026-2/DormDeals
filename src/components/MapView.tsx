@@ -85,6 +85,8 @@ const MapView: React.FC<MapViewProps> = ({
   conditions = ['New', 'Like New', 'Good', 'Fair', 'Poor'],
   isActive = true,
 }) => {
+  // This won't cause crashes because it's just a number
+  const [geocodingFinishedTrigger, setGeocodingFinishedTrigger] = useState(0);
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<LeafletMap | null>(null);
   const geocodedListingsRef = useRef<GeocodedListing[]>([]);
@@ -214,6 +216,7 @@ const MapView: React.FC<MapViewProps> = ({
   // Geocode ALL listings once (only when listings array changes AND map view is active)
   useEffect(() => {
     if (!leafletLoaded || !isActive) return;
+    let isCancelled = false;
 
     setStatus('Plotting listings…');
 
@@ -221,6 +224,7 @@ const MapView: React.FC<MapViewProps> = ({
       try {
         if (listings.length === 0) {
           geocodedListingsRef.current = [];
+          setGeocodingFinishedTrigger((prev) => prev + 1); // Add this!
           setStatus('');
           return;
         }
@@ -228,18 +232,29 @@ const MapView: React.FC<MapViewProps> = ({
         // Stagger requests 200ms apart to avoid rate limiting
         const geocoded: GeocodedListing[] = [];
         for (let i = 0; i < listings.length; i++) {
+          if (isCancelled) return;
           if (i > 0) await new Promise((r) => setTimeout(r, 200));
           const coords = await geocode(listings[i].location);
           geocoded.push({ listing: listings[i], coords });
         }
 
-        geocodedListingsRef.current = geocoded;
-        setStatus('');
+        // geocodedListingsRef.current = geocoded;
+        // setGeocodingFinishedTrigger((prev) => prev + 1); // THE "TELL": Trigger the markers
+        // setStatus('');
+        if (!isCancelled) {
+          geocodedListingsRef.current = geocoded;
+          setGeocodingFinishedTrigger((prev) => prev + 1);
+          setStatus('');
+        }
       } catch (error) {
         console.error('Error geocoding listings:', error);
         setStatus('');
       }
     })();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [listings, leafletLoaded, isActive]);
 
   // Update map markers based on filtered listings (runs when filters change, NOT when geocoding)
@@ -334,7 +349,7 @@ const MapView: React.FC<MapViewProps> = ({
         });
       });
     }
-  }, [filteredListings, userCoords, onSelectListing]);
+  }, [filteredListings, userCoords, onSelectListing, geocodingFinishedTrigger]);
 
   return (
     <div style={{ position: 'relative', height: '100%', minHeight: '500px' }}>
