@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { generateListingCopyFromImage } from '../api/gemini.js';
+import { generateListingCopyFromImage } from '../api/gemini';
 import { ALLOWED_EMAIL_DOMAINS } from '../constants/emailDomains';
 import { Listing } from '../types/Listing';
 
