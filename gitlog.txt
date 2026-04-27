@@ -1,0 +1,626 @@
+commit 048c9fa8cf8e8e3e7cb87767f325947b3ad81596
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Sat Apr 25 11:38:26 2026 -0500
+
+    fix: added status indicator for plotting listing, added iconSize to display icon without zoom in
+
+M	src/components/MapView.tsx
+
+commit eeaa5f4cec367e02109ffcb9312d1110b00ed731
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Sat Apr 25 11:19:23 2026 -0500
+
+    more readme changes
+
+M	README.md
+A	resources/mapview.png
+
+commit 308dbd082aa086e0156b4378e0ee0c3da0be3108
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Sat Apr 25 11:15:34 2026 -0500
+
+    added final readme
+
+M	README.md
+
+commit 3e6f5acb607a6f1b5f5bf277e9fa6df6da77e7f9
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Sat Apr 25 11:14:53 2026 -0500
+
+    final readme
+
+M	README.md
+A	resources/addListingFinal.png
+A	resources/filterFinal.png
+A	resources/marketplaceFinal.png
+A	resources/searchFinal.png
+
+commit 46fcfdcf8579ba79f798f76e28403033f96fd2a5
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Sat Apr 25 02:13:30 2026 -0500
+
+    map-view final file changes
+
+M	.vscode/settings.json
+M	src/components/MapView.tsx
+
+commit c9edacb70f975fc130b4b01e3022178402db54ef
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Wed Apr 22 20:19:17 2026 -0500
+
+    added necessary package modules and fixed the filters for map-view
+
+M	package-lock.json
+M	src/components/MapView.tsx
+
+commit 6ea72fa08a5244db005c8c35f2bdb90a2e1f45bf
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Wed Apr 22 20:04:53 2026 -0500
+
+    filter-mapview
+
+M	src/App.tsx
+M	src/components/MapView.tsx
+
+commit be636857204516e9e2df44411a1802ebd9239781
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Thu Apr 23 10:31:05 2026 -0500
+
+    fix: removed contact seller button
+
+M	src/components/ListingDetailsModal.tsx
+
+commit 15e53e4abce6fea53eac03b2a69c257f7db90b50
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 21 23:50:03 2026 -0500
+
+    Standardize furniture type categories
+    
+    Replace individual furniture entries with broader, normalized categories. Consolidates similar items (e.g., Bed → Bed/Mattress/Frame, Couch → Couch/Sofa, Desk → Desk/Table), and adds Electronics/Entertainment, Shelf/Storage, and Tools/Appliances.
+    Keeps 'Others' as a catch-all.
+    This change simplifies category management and should be reflected in any UI dropdowns or data mappings that consume FURNITURE_TYPES.
+
+M	src/constants/furnitureTypes.ts
+
+commit eb6cd7a416aafb1c2f3ac098c3bdd26ad070ab41
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 21 23:36:35 2026 -0500
+
+    Extract furniture types into constants file
+    
+    Move the hard-coded furniture types array into a shared constant (src/constants/furnitureTypes.ts) and import FURNITURE_TYPES in App.tsx.
+    Remove the local furnitureTypes variable and update usages (type buttons and AddListingForm prop) to use the new constant for reuse and simpler maintenance.
+
+M	src/App.tsx
+A	src/constants/furnitureTypes.ts
+
+commit f7767d7ac0302232b63d94cb7946e96e9eda5509
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 21 23:21:04 2026 -0500
+
+    Support multiple allowed Northwestern email domains
+    
+    Replace hardcoded ALLOWED_DOMAIN with ALLOWED_EMAIL_DOMAINS import and update the auth email validation to check whether the user's email ends with any allowed domain (case-insensitive).
+    This centralizes domain configuration and enables multiple permitted domains while preserving sign-out behavior for missing or disallowed emails.
+
+M	src/context/AuthContext.tsx
+
+commit 6b75ff123d838fd97e650a4a035f8534f8ca0e16
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 21 23:12:32 2026 -0500
+
+    Update src/components/LoginPage.tsx
+    
+    Fix wording of error string
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/components/LoginPage.tsx
+
+commit a2097ff382361a1278d9773a5bff7b018d8ba9e5
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 21 22:55:22 2026 -0500
+
+    Add email domain whitelist, furniture type dropdown and form validation
+    
+    Introduce a centralized ALLOWED_EMAIL_DOMAINS constant and enforce Northwestern email domains across the app. Added src/constants/emailDomains.ts. LoginPage now checks sign-in emails against the whitelist and shows a clearer error message on mismatch. AddListingForm now validates sellerContact emails (shows error text and red border), tracks email errors, and prevents submission on invalid domain; it also converts the furniture type input into a select driven by a furnitureTypes prop. App.tsx updated to pass furnitureTypes to the form and renamed 'Other' to 'Others'. Updated app-vision.md to list allowed domains and reflect minor UI/UX wording changes (Location, price/condition/filter notes, etc.).
+
+M	app-vision.md
+M	src/App.tsx
+M	src/components/AddListingForm.tsx
+M	src/components/LoginPage.tsx
+A	src/constants/emailDomains.ts
+
+commit f6fe54755337d9a176484ba59cda418fd61895db
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 21 22:00:07 2026 -0500
+
+    Revert "Fixed the merge conflicts with the previous merge request for the Category Drop-Down Menu"
+    
+    This reverts commit 947b1ba59c36303958a25dcc4ccb01fd3976886f.
+    
+    Restore to the state before the commit, as the previous commit introduced issues. This will allow us to address the merge conflicts properly and ensure that the Category Drop-Down Menu functions as intended.
+
+M	src/App.tsx
+M	src/components/AddListingForm.tsx
+
+commit 947b1ba59c36303958a25dcc4ccb01fd3976886f
+Author: Mitchell Kaszuba <ksz@u.northwestern.edu>
+Date:   Tue Apr 21 20:52:57 2026 -0500
+
+    Fixed the merge conflicts with the previous merge request for the Category Drop-Down Menu
+
+M	src/App.tsx
+M	src/components/AddListingForm.tsx
+
+commit 23a8f81ec389e298419dbbe2a0baddf7c0106528
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Mon Apr 20 16:12:41 2026 -0500
+
+    Update src/App.tsx
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/App.tsx
+
+commit 0eb16712ddf84c63cf3d6e24859f081066704481
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Mon Apr 20 16:11:12 2026 -0500
+
+    Update src/components/MapView.tsx
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/components/MapView.tsx
+
+commit 0874faa4b62bdd0d4b5989daf2b57529f82a9062
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Mon Apr 20 16:02:26 2026 -0500
+
+    Update src/components/MapView.tsx
+    
+    set integrity+crossOrigin on the injected resources
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/components/MapView.tsx
+
+commit c9fcb51ef44a918c4bcf9c118c40214b6330f4f1
+Author: copilot-swe-agent[bot] <198982749+Copilot@users.noreply.github.com>
+Date:   Mon Apr 20 20:58:08 2026 +0000
+
+    fix: guard geolocation access in map view
+    
+    Agent-Logs-Url: https://github.com/NUCS394-S2026-2/DormDeals/sessions/8c39e7f2-078a-4714-bca7-41c06997b983
+
+M	src/components/MapView.tsx
+
+commit 7bd2262fd205340120d79a101384c3698d327b44
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Mon Apr 20 15:55:06 2026 -0500
+
+    Update src/components/MapView.tsx
+    
+    Add onSelectListing to the dependencies or store it in a ref and read from the ref inside the Leaflet event handler.
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/components/MapView.tsx
+
+commit a06656fbbf8531a45d6ac869961bc06dd3ca6957
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Mon Apr 20 14:12:06 2026 -0500
+
+    fix: updated db rules
+    
+    - updated firebase real time db rules to make authentication required for r/w
+
+M	database.rules.json
+
+commit ce2e76d6efb7287b4564082a244ad2c7521cba7d
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Mon Apr 20 14:11:13 2026 -0500
+
+    fea: added initial mapview component
+    
+    - added initial mapview components, using photon and leaflet libraries
+    - fixed z-index bug for popups to add listing and view listing details
+
+M	package-lock.json
+M	package.json
+M	src/App.tsx
+M	src/components/AddListingForm.tsx
+M	src/components/ListingDetailsModal.tsx
+A	src/components/MapView.tsx
+A	src/favicon/center.png
+
+commit 170d459bdbcdece8c8a6cf5d3a52ec014157c1b7
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Sun Apr 19 17:00:21 2026 -0500
+
+    Apply suggestion from @Copilot
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/components/AddListingForm.tsx
+
+commit 05dd5325c600172ce596e48a598def846fe9b133
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Sun Apr 19 17:00:03 2026 -0500
+
+    Apply suggestion from @Copilot
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/components/AddListingForm.tsx
+
+commit ef6f514d5590aa8b9ee26bf65ca4ad66a0038f99
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Sun Apr 19 16:40:47 2026 -0500
+
+    Update src/App.tsx
+    
+    Hard-coded furniture types
+    
+    Co-authored-by: Copilot <175728472+Copilot@users.noreply.github.com>
+
+M	src/App.tsx
+
+commit 299bb9ff8cb63cd06f2147b8bb48f37d03749623
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Sun Apr 19 16:30:22 2026 -0500
+
+    added linitng fix for camera
+
+M	src/components/AddListingForm.tsx
+
+commit 53eeb55cbcfe6f914d2f457f13c943958d777340
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Sun Apr 19 16:06:38 2026 -0500
+
+    added camera support
+
+M	src/components/AddListingForm.tsx
+
+commit 7c4eea061bdd09c956f61474ad3fb237773b5c85
+Author: Mitchell Kaszuba <ksz@u.northwestern.edu>
+Date:   Wed Apr 15 22:09:41 2026 -0500
+
+    Changed furnitureTypeSet Categories to a fixed list
+
+M	src/App.tsx
+
+commit e44170e1703ffa936acfef6d7b633bc17c911df1
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Tue Apr 14 18:49:43 2026 -0500
+
+    my furniture page
+
+M	src/App.tsx
+M	src/components/ListingDetailsModal.tsx
+
+commit 40a5a61e8236e40040641386f3b3a393a18ed83e
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 14 18:36:27 2026 -0500
+
+    Adjust description of sorting by post date
+
+M	src/App.tsx
+
+commit 666cc14e5ba105d7f5715d5f982c98007d38cd02
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 14 18:34:30 2026 -0500
+
+    Restrice max price filter in marketplace to be non-negative
+
+M	src/App.tsx
+
+commit ce2e6f52ab8553514e547bf769193f5fed649a47
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 14 18:15:27 2026 -0500
+
+    Fix add listing placeholder text
+
+M	src/components/AddListingForm.tsx
+
+commit 012dcbbe571d42b981e2391ac850e4c2f151f58a
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Tue Apr 14 18:02:54 2026 -0500
+
+    Add feature: click on logo resets all filters
+
+M	README.md
+M	app-vision.md
+M	src/App.tsx
+
+commit 98f5b5a71144642a2640a9c58af469115c03a2ab
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Tue Apr 14 02:05:25 2026 -0500
+
+    added user-fixes
+
+M	src/components/AddListingForm.tsx
+
+commit 54e01d7e2661880a07315d4ea6558f4632259d1d
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Mon Apr 13 16:43:05 2026 -0500
+
+    fix: auth temporary listing missing fix
+
+M	src/App.tsx
+
+commit be619804aa38ed5b2832c331635821cc573dce91
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Sun Apr 12 20:35:02 2026 -0500
+
+    fea: added user Auth and login, no-image support for add listings
+    
+    - enabled user Auth and google login
+    - no-image support for add listings
+    - added add user apis
+    - added update/delete listings apis
+    - updated listing fetch to websocket for real time change updates to listings
+
+M	firebase.json
+M	package-lock.json
+M	src/App.tsx
+M	src/api/listing.ts
+A	src/api/users.ts
+M	src/components/AddListingForm.tsx
+M	src/components/ListingCard.tsx
+M	src/components/ListingDetailsModal.tsx
+A	src/components/LoginPage.tsx
+A	src/context/AuthContext.tsx
+M	src/main.tsx
+A	src/styles/LoginPage.css
+
+commit f08f9cf67dd4073df7499f982d18891e62883545
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Sat Apr 11 00:49:30 2026 -0500
+
+    Add condition range filter and fix search bar UI
+    
+    Introduce a new ConditionRangeFilter component with accompanying CSS to allow selecting a range of item conditions via dual-range sliders. Replace the previous single-condition select in App.tsx with min/max condition index state (minConditionIndex, maxConditionIndex) and update filtering logic to use condition indices. Also adjust search bar sizing and search input styles in index.css, and tweak the max price placeholder text.
+
+M	src/App.tsx
+A	src/components/ConditionRangeFilter.tsx
+M	src/index.css
+A	src/styles/ConditionRangeFilter.css
+
+commit 38aa9121a94770ca3d51a71fb256e1755c0d5ef5
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Fri Apr 10 23:41:06 2026 -0500
+
+    Add price validation and error UI
+    
+    Validate price input in AddListingForm: add priceError state and enhanced handleChange logic to validate empty input, non-numeric values, range (0–9999), and at most 2 decimal places; set empty price to 0. Prevent form submission when price is invalid. Add max, placeholder, inline error message and helper text under the price field to guide users.
+
+M	src/components/AddListingForm.tsx
+
+commit f2e269a246cce952858cb39d8c6fe1747bd8b48a
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Fri Apr 10 23:30:10 2026 -0500
+
+    Add functionality to clear price input on focus
+
+M	src/components/AddListingForm.tsx
+
+commit da2900e0d879addc910b8b5f1415250f51d14903
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Mon Apr 6 23:29:57 2026 -0500
+
+    Add mobile screenshot asset
+    
+    Add resources/mobile_screenshot.jpg as a new binary asset to include a mobile UI screenshot for documentation or app listing.
+
+A	resources/mobile_screenshot.jpg
+
+commit 233444dedf6337860a575f38e6e2f056f12919f5
+Author: Catherine Jeschke <catherine.c.jeschke@gmail.com>
+Date:   Mon Apr 6 14:49:11 2026 -0500
+
+    Updated the user interface to be more coherent stylistically, with purple elements to closer match our original mockup
+
+A	resources/DormDealsLogo.png
+M	src/App.css
+M	src/App.tsx
+M	src/components/ListingDetailsModal.tsx
+M	src/index.css
+
+commit b2d73065a843b2e7f709c18914a052a162808abc
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Sun Apr 5 19:56:24 2026 -0500
+
+    Add images and update README and webpage (#13)
+    
+    * Add images for README.md
+    
+    * Add icon and logo
+    
+    * Add logo images, update webpage and README
+
+M	.gitignore
+M	README.md
+M	index.html
+M	resources/Posting.png
+A	resources/icon.png
+A	resources/icon_compact.png
+A	resources/logo.png
+A	resources/logo_compact.png
+A	resources/logo_compact_trans.png
+A	resources/logo_flat.png
+M	src/App.tsx
+
+commit dc53f89ea65a237effe8d091f9597c73d17e2644
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Sun Apr 5 18:15:19 2026 -0500
+
+    Rewrite README.md
+    
+    * Add images for README.md
+    
+    * Update firebase.js to readable code
+    
+    * Rewrite README
+
+M	README.md
+D	resources/2026-screenshot.png
+A	resources/Filtering_furniture_type.png
+A	resources/Market_place_page.png
+A	resources/Posting.png
+A	resources/Search_bar.png
+
+commit 10d0d27244ba40fbcbe4f58cbcd81d6e90a3bf7a
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Sun Apr 5 17:08:21 2026 -0500
+
+    Updating firebase gitignore
+
+M	.gitignore
+M	package-lock.json
+
+commit 2ec953cd0dfbff04411abaa6203d95b521bd103f
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Sun Apr 5 16:42:32 2026 -0500
+
+    Added drag and drop image upload for add listing
+    
+    Added drag and drop image upload for add listing
+    
+    Fixed border of textboxes when adding listing
+
+M	src/components/AddListingForm.tsx
+M	src/index.css
+
+commit 81566fc74029fce2e5fdd69ae51eeb74f5bf0c0c
+Author: Catherine Jeschke <catherine.c.jeschke@gmail.com>
+Date:   Fri Apr 3 16:58:07 2026 -0500
+
+    updated the gitignore file
+
+M	.gitignore
+
+commit 571b098f4ddb46ba184a7222a3bca7c6475e29b3
+Author: Catherine Jeschke <catherine.c.jeschke@gmail.com>
+Date:   Fri Apr 3 16:48:03 2026 -0500
+
+    Implemented the apis for getListings and postListing: added firebase to package.json and package-lock.json>
+    updated the type to reflect backend data structure. Added api functions to listing.ts in api. Implemented function in components and App.tsx. Updated gitignore to ignore firebase.ts
+
+M	.gitignore
+M	database.rules.json
+M	package-lock.json
+M	package.json
+M	src/App.tsx
+A	src/api/listing.ts
+M	src/components/AddListingForm.tsx
+M	src/components/ListingCard.tsx
+M	src/components/ListingDetailsModal.tsx
+M	src/types/Listing.ts
+
+commit 318a20429bce0a8d059fb30992dd5f91e6eb1778
+Author: Lianhao Zheng <lianhaoz06@gmail.com>
+Date:   Fri Apr 3 12:53:02 2026 -0500
+
+    Added Firebase Config
+
+A	.firebaserc
+M	.gitignore
+A	database.rules.json
+A	firebase.json
+A	src/firebase/schema.json
+
+commit 7a0c502cfd91f965dc6362f57e36848f2290acea
+Author: Wenpeng Cai <83854350+TXJ-DSK@users.noreply.github.com>
+Date:   Fri Apr 3 12:13:55 2026 -0500
+
+    Updated app-vision, add multiple functions
+
+M	app-vision.md
+M	package-lock.json
+M	src/App.tsx
+M	src/components/AddListingForm.tsx
+M	src/components/ListingCard.tsx
+A	src/components/ListingDetailsModal.tsx
+M	src/types/Listing.ts
+
+commit 95f11c9ba2fafdbe983774618c5bb4d44d219246
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Fri Apr 3 11:48:42 2026 -0500
+
+    updated the app-vision to have our updated design doc
+
+M	app-vision.md
+
+commit f8765923de6532f8ac233b02022ce584e34be746
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Wed Apr 1 19:31:28 2026 -0500
+
+    added tests and fixed tests
+
+M	src/app.test.tsx
+M	src/components/AddListingButton.tsx
+
+commit 0ce4c6b418f607e44d21baee6b793ef1f891ddf7
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Wed Apr 1 19:20:16 2026 -0500
+
+    Added prototype
+
+A	app-vision.md
+A	copilot-instructions.md
+M	src/App.tsx
+A	src/components/AddListingButton.tsx
+A	src/components/AddListingForm.tsx
+A	src/components/ListingCard.tsx
+A	src/components/SearchBar.tsx
+M	src/index.css
+A	src/types/Listing.ts
+
+commit a2c2c1b8b7737ddbe8c4ef1e91fae08b2d8f9173
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Wed Apr 1 18:34:30 2026 -0500
+
+    Update App title
+
+M	src/App.tsx
+
+commit 9bc747f2263cfa672055b56fd9b1dcb4fcefe97d
+Author: Mercy Muiruri <mercymuiruri2027@u.northwestern.edu>
+Date:   Wed Apr 1 18:19:30 2026 -0500
+
+    Initial commit from pretty-vitest-react-ts-template
+
+A	.github/dependabot.yml
+A	.gitignore
+A	.husky/pre-commit
+A	.lintstagedrc.json
+A	.nvmrc
+A	.prettierignore
+A	.prettierrc.cjs
+A	.vscode/settings.json
+A	README.md
+A	eslint.config.cjs
+A	index.html
+A	package-lock.json
+A	package.json
+A	resources/2026-screenshot.png
+A	src/394-2026-Logo.png
+A	src/App.css
+A	src/App.tsx
+A	src/NU-SE-ICON.svg
+A	src/app.test.tsx
+A	src/favicon/android-chrome-192x192.png
+A	src/favicon/android-chrome-512x512.png
+A	src/favicon/apple-touch-icon.png
+A	src/favicon/favicon-16x16.png
+A	src/favicon/favicon-32x32.png
+A	src/favicon/favicon.ico
+A	src/favicon/site.webmanifest
+A	src/index.css
+A	src/main.tsx
+A	src/test/setup.ts
+A	src/vite-env.d.ts
+A	tsconfig.json
+A	tsconfig.node.json
+A	vite.config.ts
